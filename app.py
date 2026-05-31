@@ -1,10 +1,10 @@
+from importlib.metadata import files
 import os
 import re
 import unicodedata
 
 # Set the directory to the folder you want to normalize.
 directory = r"C:\Users\joona\Desktop\development\koekelberg\Sprites\badfiles"
-file = ""
 
 def main():
     dir_path = directory
@@ -46,6 +46,7 @@ def list_directory_files(dir_path):
     print(*[normalize_filename(f) for f in files], sep="\n")
 
     return files
+
 def normalize_filename(filename):
     base, ext = os.path.splitext(filename)
     normalized = unicodedata.normalize("NFKD", base)
@@ -54,7 +55,6 @@ def normalize_filename(filename):
     normalized = re.sub(r"[\W_]+", "_", normalized)
     normalized = normalized.strip("_")
     return normalized + ext.lower()
-
 
 def rename_file(dir_path, filename):
     normalized_name = normalize_filename(filename)
