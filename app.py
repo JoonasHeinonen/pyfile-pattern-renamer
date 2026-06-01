@@ -2,6 +2,7 @@ from importlib.metadata import files
 import os
 import re
 import unicodedata
+from gui import GUI
 
 # Set the directory to the folder you want to normalize.
 directory = r"C:\Users\joona\Desktop\development\koekelberg\Sprites\badfiles"
@@ -12,6 +13,7 @@ def main():
     if not files:
         return
     rename_files(dir_path, files)
+    GUI()
 
 def directory_file(f, d):
     #Opens a file from a directory and reads it.
