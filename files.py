@@ -7,26 +7,22 @@ class Files:
     def __init__(self, dir_path):
         self.dir_path = dir_path
         self.files = []
+    
+    def convert_files(self):
+        files = self.list_directory_files(self.dir_path)
+        if not files:
+            return
+        self.rename_files(self.dir_path, files)
 
     def list_directory_files(self, dir_path):
-        print("Directory: ", dir_path)
-
         try:
             dir_list = os.listdir(dir_path)
         except FileNotFoundError:
-            print("Directory not found:", dir_path)
             return []
 
         files = [f for f in dir_list if os.path.isfile(os.path.join(dir_path, f))]
         if not files:
-            print("No files found in directory.")
             return []
-
-        print("Files in directory:")
-        print(*files, sep="\n")
-
-        print("Normalized file names:")
-        print(*[self.normalize_filename(f) for f in files], sep="\n")
 
         return files
 
@@ -45,7 +41,6 @@ class Files:
         new_path = os.path.join(dir_path, normalized_name)
 
         if old_path == new_path:
-            print("Skipping already normalized file:", filename)
             return
 
         if os.path.normcase(old_path) == os.path.normcase(new_path):
