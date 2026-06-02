@@ -13,7 +13,8 @@ def main():
     if not files:
         return
     rename_files(dir_path, files)
-    GUI()
+    gui = GUI(files, dir_path)
+    gui.run()
 
 def directory_file(f, d):
     #Opens a file from a directory and reads it.
