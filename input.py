@@ -8,7 +8,6 @@ class Input:
 
     def handle_events(self):
         for event in pygame.event.get():
-            print("Handling events...")
             if event.type == pygame.KEYDOWN:
                 print("Key pressed:", event.unicode)
                 if event.key == pygame.K_BACKSPACE:
