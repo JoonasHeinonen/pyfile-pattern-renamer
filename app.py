@@ -16,18 +16,6 @@ def main():
     gui = GUI(files, dir_path)
     gui.run()
 
-def directory_file(f, d):
-    #Opens a file from a directory and reads it.
-
-    #Parameters:
-    #    f (str):The name of the file to be opened.
-    #    d (str):The directory where the file is located.
-
-    global directory, file
-    f = input("Enter the file name: ")
-
-    file = f
-
 def list_directory_files(dir_path):
     print("Directory: ", dir_path)
 
@@ -88,11 +76,6 @@ def rename_file(dir_path, filename):
         print("Renamed '{}' -> '{}'".format(filename, normalized_name))
     except OSError as exc:
         print("Failed to rename {}: {}".format(filename, exc))
-
-def read_file():
-    #Reads the file that was opened in the directory_file function.
-    f = open(directory + "\\" + file)
-    print(f.read())
 
 def rename_files(dir_path, files):
     for f in files:
