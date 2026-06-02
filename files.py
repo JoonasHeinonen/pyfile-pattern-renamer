@@ -1,4 +1,3 @@
-from importlib.metadata import files
 import os
 import re
 import unicodedata

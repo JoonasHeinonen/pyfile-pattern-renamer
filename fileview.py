@@ -11,16 +11,29 @@ class Fileview:
         if window_surface is None:
             return
 
+        # Scrollbar.
+        pygame.draw.rect(window_surface, pygame.Color("#000000"), [640 - 10, 40, 10, 480 - 40])
+        pygame.draw.rect(window_surface, pygame.Color("#424242"), [640 - 9, 41, 8, 480 - 40])
+
+        # Scroll up.
+        pygame.draw.rect(window_surface, pygame.Color("#000000"), [640 - 10, 40, 10, 10])
+        pygame.draw.rect(window_surface, pygame.Color("#424242"), [640 - 9, 41, 8, 8])
+
+        # Scroll down.
+        pygame.draw.rect(window_surface, pygame.Color("#000000"), [640 - 10, 480 - 10, 10, 10])
+        pygame.draw.rect(window_surface, pygame.Color("#424242"), [640 - 9, 480 - 9, 8, 8])
+
         font = pygame.font.Font(None, 25)
         index = 0
+
         for file in new_files:
             list_item = font.render(file, True, pygame.Color("#FFFFFF"))
             colors = ["#21DD50", "#169235"]
 
             if index % 2 == 0:
-                pygame.draw.rect(window_surface, pygame.Color(colors[0]), [0, y_offset - 4, 640, 29])
+                pygame.draw.rect(window_surface, pygame.Color(colors[0]), [0, y_offset - 4, 640 - 10, 29])
             else:
-                pygame.draw.rect(window_surface, pygame.Color(colors[1]), [0, y_offset - 4, 640, 29])
+                pygame.draw.rect(window_surface, pygame.Color(colors[1]), [0, y_offset - 4, 640 - 10, 29])
             index += 1
             window_surface.blit(list_item, (10, y_offset))
             y_offset += 30
