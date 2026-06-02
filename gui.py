@@ -1,12 +1,13 @@
 import pygame
 from icon import Icon
 from files import Files
+from input import Input
+
 clock = pygame.time.Clock()
 
 class GUI:
 
-    def __init__(self, folder_files=None, directory=None, font_size=36, text=""):
-        self.folder_files = folder_files
+    def __init__(self, directory=None, font_size=36, text=""):
         self.directory = directory
         self.font_size = font_size
         self.text = text
@@ -59,10 +60,7 @@ class GUI:
         snake_case_icon = Icon("media/icon_snake_case.png")
 
         font = pygame.font.Font(None, self.font_size)
-        small_font = pygame.font.Font(None, 16)
-
         text = font.render("Convert", True, pygame.Color("#FFFFFF"))
-        directory_text = small_font.render(self.directory, True, pygame.Color("#FFFFFF"))
 
         pygame.draw.rect(window_surface, pygame.Color("#222222"), [0, 0, window_size[0], 40])
 
@@ -90,10 +88,6 @@ class GUI:
         else:
             pygame.draw.rect(window_surface, pygame.Color("#424242"), [160, 1, 38, 38])
 
-        # Folder text field.
-        pygame.draw.rect(window_surface, pygame.Color("#001AFF"), [199, 0, window_size[0] - (199 + 40), 40])
-        pygame.draw.rect(window_surface, pygame.Color("#3549FF"), [200, 1, window_size[0] - (199 + 42), 18])
-
         # superimposing the text onto our button
         window_surface.blit(text, (10, 10))
         self.update_files_view(window_surface=window_surface)
@@ -102,7 +96,6 @@ class GUI:
         window_surface.blit(folder_icon.render_icon()[0], (window_size[0] - 40, 0))
         window_surface.blit(camel_case_icon.render_icon()[0], (120, 0))
         window_surface.blit(snake_case_icon.render_icon()[0], (160, 0))
-        window_surface.blit(directory_text, (205, 5))
 
         self.button_clicks(mouse, window_size=window_size, window_surface=window_surface)
 
@@ -114,8 +107,6 @@ class GUI:
         window_surface = pygame.display.set_mode(WINDOW_SIZE)
 
         is_running = True
-
-        files = self.folder_files if self.folder_files else []
 
         while is_running:
             window_surface.fill((0,0,0))
@@ -137,11 +128,10 @@ class GUI:
             
             self.draw_buttons(window_surface, mouse, WINDOW_SIZE)
 
-            input_box = pygame.Rect(10, 200, 620, 100)
-            pygame.draw.rect(window_surface, (255, 255, 255), input_box, 2)
-            font = pygame.font.Font(None, 12)
-            text_surface = font.render(self.directory, True, (255, 255, 255))
-            window_surface.blit(text_surface, (input_box.x + 5, input_box.y + 5))
+            # Folder text field & features.
+            input = Input(window_surface, self.directory)
+            input.handle_events()
+            input.render_input()
 
             # updates the frames of the game
             pygame.display.flip()
