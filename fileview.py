@@ -27,7 +27,7 @@ class Fileview:
             return
 
         # Scrollbar.
-        pygame.draw.rect(window_surface, pygame.Color("#222222"), [640 - 15, 40, 15, 480 - 40])
+        pygame.draw.rect(window_surface, pygame.Color("#222222"), [640 - 14, 40, 13, 480 - 40])
 
         # Scroll up.
         if window_size[0] - 15 <= mouse[0] <= window_size[0] and 0 <= mouse[1] >= 40  and 0 <= mouse[1] <= 55:
@@ -45,7 +45,7 @@ class Fileview:
 
         for file in new_files:
             list_item = pygame.font.Font(None, 16).render(file, True, pygame.Color("#FFFFFF"))
-            colors = ["#169235", "#0F6625"]
+            colors = ["#162D92", "#0F1066"]
 
             if index % 2 == 0:
                 pygame.draw.rect(window_surface, pygame.Color(colors[0]), [0, y_offset - 4, 640 - 15, 20])

@@ -18,6 +18,9 @@ class GUI:
         WINDOW_SIZE = (640, 480)
         window_surface = pygame.display.set_mode(WINDOW_SIZE)
 
+        # Create buttons instance once, before the loop, so mode persists
+        buttons = Buttons((0, 0), self.directory)
+
         is_running = True
 
         while is_running:
@@ -36,9 +39,10 @@ class GUI:
 
             # Mouse.
             mouse = pygame.mouse.get_pos()
+            buttons.mouse = mouse
+            buttons.directory = self.directory
             
             # Buttons.
-            buttons = Buttons(mouse, self.directory)
             buttons.draw_buttons(window_surface, mouse, window_size=WINDOW_SIZE)
             buttons.button_clicks(mouse, window_size=WINDOW_SIZE, window_surface=window_surface)
 

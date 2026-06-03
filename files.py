@@ -8,11 +8,11 @@ class Files:
         self.dir_path = dir_path
         self.files = []
     
-    def convert_files(self):
+    def convert_files(self, mode):
         files = self.list_directory_files(self.dir_path)
         if not files:
             return
-        self.rename_files(self.dir_path, files)
+        self.rename_files(self.dir_path, files, mode)
 
     def list_directory_files(self, dir_path):
         try:
@@ -25,18 +25,36 @@ class Files:
             return []
 
         return files
+    
+    # Define a function to convert a string to camel case
+    def camel_case(self, s):
+        # Use regular expression substitution to replace underscores and hyphens with spaces,
+        # then title case the string (capitalize the first letter of each word), and remove spaces
+        s = re.sub(r"(_|-)+", " ", s).title().replace(" ", "")
+        
+        # Join the string, ensuring the first letter is lowercase
+        return ''.join([s[0].lower(), s[1:]])
 
-    def normalize_filename(self,filename):
-        base, ext = os.path.splitext(filename)
-        normalized = unicodedata.normalize("NFKD", base)
-        normalized = normalized.encode("ascii", "ignore").decode("ascii")
-        normalized = normalized.lower()
-        normalized = re.sub(r"[\W_]+", "_", normalized)
-        normalized = normalized.strip("_")
-        return normalized + ext.lower()
+    def normalize_filename(self, filename, mode):
+        match mode:
+            case 'camel_case':
+                base, ext = os.path.splitext(filename)
+                normalized = self.camel_case(base)
+                return normalized + ext.lower()
+            case 'snake_case':
+                base, ext = os.path.splitext(filename)
+                normalized = unicodedata.normalize("NFKD", base)
+                normalized = normalized.encode("ascii", "ignore").decode("ascii")
+                normalized = normalized.lower()
+                normalized = re.sub(r"[\W_]+", "_", normalized)
+                normalized = normalized.strip("_")
+                return normalized + ext.lower()
+            case _:
+                return filename
 
-    def rename_file(self, dir_path, filename):
-        normalized_name = self.normalize_filename(filename)
+    def rename_file(self, dir_path, mode, filename):
+        print("Renaming file: ", mode)
+        normalized_name = self.normalize_filename(filename, mode)
         old_path = os.path.join(dir_path, filename)
         new_path = os.path.join(dir_path, normalized_name)
 
@@ -64,6 +82,7 @@ class Files:
         except OSError as exc:
             print("Failed to rename {}: {}".format(filename, exc))
 
-    def rename_files(self, dir_path, files):
+    def rename_files(self, dir_path, files, mode):
+        print("JavaScript in camelCase: ", self.camel_case('Java_Script'))
         for f in files:
-            self.rename_file(dir_path, f)
+            self.rename_file(dir_path, mode, f)

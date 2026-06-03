@@ -5,11 +5,20 @@ from icon import Icon
 
 class Buttons:
 
+    modes = ["camel_case", "snake_case"]
+    mode = ""
+
     def __init__(self, mouse, directory, window_surface=None,fileview=Fileview):
         self.mouse = mouse
         self.directory = directory
         self.window_surface = window_surface
         self.fileview = fileview
+
+    def set_mode(self, mode):
+        self.mode = mode
+    
+    def get_mode(self):
+        return self.mode
 
     def button_clicks(self, mouse, window_size=(640, 480), window_surface=None):
         new_files = Files(self.directory)
@@ -20,7 +29,8 @@ class Buttons:
             if ev.type == pygame.MOUSEBUTTONDOWN:
                 # Convert button.
                 if 0 <= mouse[0] <= 119 and 0 <= mouse[1] <= 39:
-                    new_files.convert_files()
+                    new_files.convert_files(self.get_mode())
+                    ## TODO todo
                     print("Convert button clicked")
                 # Folder button.
                 if window_size[0] - 40 <= mouse[0] <= window_size[0] and 0 <= mouse[1] <= 40:
@@ -29,9 +39,12 @@ class Buttons:
                 # Camel case button.
                 if 120 <= mouse[0] <= 159 and 0 <= mouse[1] <= 39:
                     print("Camel case button clicked")
+                    self.set_mode(self.modes[0])
                 # Snake case button.
                 if 160 <= mouse[0] <= 199 and 0 <= mouse[1] <= 39:
                     print("Snake case button clicked")
+                    self.set_mode(self.modes[1])
+                print("Conversion mode: ", self.mode)
 
     def draw_buttons(self, window_surface, mouse, window_size=(640, 480)):
         folder_icon = Icon("media/icon_folder.png")
