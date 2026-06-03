@@ -24,7 +24,7 @@ class Buttons:
                     print("Convert button clicked")
                 # Folder button.
                 if window_size[0] - 40 <= mouse[0] <= window_size[0] and 0 <= mouse[1] <= 40:
-                    self.fileview.update_files_view(self, window_surface=window_surface)
+                    self.fileview.update_files_view(self, window_surface=window_surface, mouse=mouse)
                     print("Folder button clicked")
                 # Camel case button.
                 if 120 <= mouse[0] <= 159 and 0 <= mouse[1] <= 39:
@@ -71,7 +71,12 @@ class Buttons:
         window_surface.blit(text, (10, 10))
 
         # File listing and view.
-        self.fileview.update_files_view(self, window_surface=window_surface)
+        self.fileview.update_files_view(
+            self,
+            window_surface=window_surface,
+            mouse=mouse,
+            window_size=window_size
+        )
 
         # Button icons superimposed on the buttons
         window_surface.blit(folder_icon.render_icon()[0], (window_size[0] - 40, 0))

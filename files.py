@@ -3,6 +3,7 @@ import re
 import unicodedata
 
 class Files:
+
     def __init__(self, dir_path):
         self.dir_path = dir_path
         self.files = []
