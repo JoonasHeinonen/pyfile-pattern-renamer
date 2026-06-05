@@ -2,6 +2,11 @@ import pygame
 from files import Files
 from fileview import Fileview
 from icon import Icon
+import os
+import dotenv
+
+dotenv_file = dotenv.find_dotenv()
+dotenv.load_dotenv(dotenv_file)
 
 class Buttons:
 
@@ -20,6 +25,10 @@ class Buttons:
     
     def get_mode(self):
         return self.mode
+    
+    def update_folder(self, key=""):
+        folder_value = getattr(self, "directory", None) or os.environ.get(key, "")
+        dotenv.set_key(dotenv_file, "FOLDER", folder_value)
 
     def button_clicks(self, mouse, window_size=(640, 480), window_surface=None):
         new_files = Files(self.directory)
@@ -39,6 +48,7 @@ class Buttons:
                 if window_size[0] - 40 <= mouse[0] <= window_size[0] and 0 <= mouse[1] <= 40:
                     self.fileview.update_files_view(self, window_surface=window_surface, mouse=mouse)
                     self.mode_text = "Updated the file view."
+                    self.update_folder("FOLDER")
                 # Camel case button.
                 if 120 <= mouse[0] <= 159 and 0 <= mouse[1] <= 39:
                     self.set_mode(self.modes[0])
