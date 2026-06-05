@@ -48,9 +48,9 @@ class Fileview:
             colors = ["#162D92", "#0F1066"]
 
             if index % 2 == 0:
-                pygame.draw.rect(window_surface, pygame.Color(colors[0]), [0, y_offset - 4, 640 - 15, 20])
+                pygame.draw.rect(window_surface, pygame.Color(colors[0]), [1, y_offset - 4, 640 - 16, 20])
             else:
-                pygame.draw.rect(window_surface, pygame.Color(colors[1]), [0, y_offset - 4, 640 - 15, 20])
+                pygame.draw.rect(window_surface, pygame.Color(colors[1]), [1, y_offset - 4, 640 - 16, 20])
             index += 1
             window_surface.blit(list_item, (5, y_offset))
             y_offset += 21

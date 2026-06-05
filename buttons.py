@@ -7,6 +7,7 @@ class Buttons:
 
     modes = ["camel_case", "snake_case"]
     mode = ""
+    mode_text = "Welcome to Pyfile Pattern Renamer! Please select a mode."
 
     def __init__(self, mouse, directory, window_surface=None,fileview=Fileview):
         self.mouse = mouse
@@ -30,21 +31,22 @@ class Buttons:
                 # Convert button.
                 if 0 <= mouse[0] <= 119 and 0 <= mouse[1] <= 39:
                     new_files.convert_files(self.get_mode())
-                    ## TODO todo
-                    print("Convert button clicked")
+                    if self.get_mode() == "":
+                        self.mode_text = "Please select mode first!"
+                    else:
+                        self.mode_text = f"Conversion mode: {self.get_mode()}"
                 # Folder button.
                 if window_size[0] - 40 <= mouse[0] <= window_size[0] and 0 <= mouse[1] <= 40:
                     self.fileview.update_files_view(self, window_surface=window_surface, mouse=mouse)
-                    print("Folder button clicked")
+                    self.mode_text = "Updated the file view."
                 # Camel case button.
                 if 120 <= mouse[0] <= 159 and 0 <= mouse[1] <= 39:
-                    print("Camel case button clicked")
                     self.set_mode(self.modes[0])
+                    self.mode_text = f"Camel case conversion selected!"
                 # Snake case button.
                 if 160 <= mouse[0] <= 199 and 0 <= mouse[1] <= 39:
-                    print("Snake case button clicked")
                     self.set_mode(self.modes[1])
-                print("Conversion mode: ", self.mode)
+                    self.mode_text = f"Snake case conversion selected!"
 
     def draw_buttons(self, window_surface, mouse, window_size=(640, 480)):
         folder_icon = Icon("media/icon_folder.png")
@@ -54,7 +56,8 @@ class Buttons:
         font = pygame.font.Font(None, 36)
         text = font.render("Convert", True, pygame.Color("#FFFFFF"))
 
-        pygame.draw.rect(window_surface, pygame.Color("#222222"), [0, 0, window_size[0], 40])
+        pygame.draw.rect(window_surface, pygame.Color("#222222"), [0, 0, 199, 40])
+        pygame.draw.rect(window_surface, pygame.Color("#222222"), [window_size[0] - 40, 0, 40, 40])
 
         # Convert button.
         if 0 <= mouse[0] <= 119 and 0 <= mouse[1] <= 39:
@@ -91,7 +94,10 @@ class Buttons:
             window_size=window_size
         )
 
+        mode_text_surface = pygame.font.Font(None, 16).render(self.mode_text, True, (255, 0, 0))
+        window_surface.blit(mode_text_surface, (205, 25))
+
         # Button icons superimposed on the buttons
         window_surface.blit(folder_icon.render_icon()[0], (window_size[0] - 40, 0))
         window_surface.blit(camel_case_icon.render_icon()[0], (120, 0))
-        window_surface.blit(snake_case_icon.render_icon()[0], (160, 0))
+        window_surface.blit(snake_case_icon.render_icon()[0], (158, 0))

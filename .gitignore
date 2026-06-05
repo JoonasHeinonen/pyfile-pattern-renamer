@@ -1,0 +1,5 @@
+# Generated files & folders.
+__pycache__/
+
+# Envrionment files.
+.env

@@ -1,3 +1,5 @@
+from tkinter import font
+
 import pygame
 from input import Input
 from buttons import Buttons
@@ -42,14 +44,14 @@ class GUI:
             buttons.mouse = mouse
             buttons.directory = self.directory
             
-            # Buttons.
-            buttons.draw_buttons(window_surface, mouse, window_size=WINDOW_SIZE)
-            buttons.button_clicks(mouse, window_size=WINDOW_SIZE, window_surface=window_surface)
-
             # Folder text field & features.
             input = Input(window_surface, self.directory)
             input.handle_events()
             input.render_input()
+
+            # Buttons.
+            buttons.draw_buttons(window_surface, mouse, window_size=WINDOW_SIZE)
+            buttons.button_clicks(mouse, window_size=WINDOW_SIZE, window_surface=window_surface)
 
             # updates the frames of the game
             pygame.display.flip()

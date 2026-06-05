@@ -1,9 +1,13 @@
 from gui import GUI
+import os
+from dotenv import load_dotenv
 
-directory = r"C:\Users\joona\Desktop\development\koekelberg\Sprites\badfiles"
+load_dotenv()
+
+DIRECTORY = os.getenv('FOLDER')
 
 def main():
-    gui = GUI(directory)
+    gui = GUI(DIRECTORY)
     gui.run()
 
 main()
