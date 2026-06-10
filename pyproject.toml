@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pyfile-pattern-renamer"
+version = "0.1.0"
+requires-python = ">=3.10"
+dependencies = [
+  "pygame>=2.6.0",
+  "python-dotenv>=1.2.0",
+]
+authors = [
+  {name = "Joonas Heinonen", email = "joonas.heinonen1996@gmail.com"},
+]
+maintainers = [
+    {name = "Joonas Heinonen", email = "joonas.heinonen1996@gmail.com"},
+]
+description = "A small GUI tool to normalize file names in a folder"
+readme = "README.md"
+
+[project.scripts]
+pyfile-pattern-renamer = "app:main"
+
+[tool.setuptools]
+py-modules = ["app", "buttons", "files", "fileview", "gui", "icon", "input"]
