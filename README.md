@@ -54,4 +54,4 @@ Copy the contents of `.env.example` to `.env` by running the following:
 cp .env.example .env
 ```
 
-You may now run the PyGame application by simply running `python app.py` or while in the environment, `pyfile-pattern-renamer`. 
+You may now run the PyGame application by simply running `python app.py`.
