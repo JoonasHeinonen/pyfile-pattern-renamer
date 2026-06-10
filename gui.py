@@ -1,5 +1,3 @@
-from tkinter import font
-
 import pygame
 from input import Input
 from buttons import Buttons

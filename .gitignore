@@ -1,5 +1,7 @@
 # Generated files & folders.
 __pycache__/
 
-# Envrionment files.
+# Environment files.
 .env
+.venv/
+pyfile_pattern_renamer.egg-info/
