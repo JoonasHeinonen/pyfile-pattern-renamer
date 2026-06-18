@@ -9,23 +9,26 @@ class Files:
         self.files = []
     
     def convert_files(self, mode):
-        files = self.list_directory_files(self.dir_path)
+        files = self.list_directory(self.dir_path)
         if not files:
             return
         self.rename_files(self.dir_path, files, mode)
 
-    def list_directory_files(self, dir_path):
+    def list_directory(self, dir_path, is_folder = False):
         try:
             dir_list = os.listdir(dir_path)
         except FileNotFoundError:
             return []
 
-        files = [f for f in dir_list if os.path.isfile(os.path.join(dir_path, f))]
-        if not files:
+        if is_folder:
+            results = [r for r in dir_list if os.path.isdir(os.path.join(dir_path, r))]
+        else:
+            results = [r for r in dir_list if os.path.isfile(os.path.join(dir_path, r))]
+        if not results:
             return []
 
-        return files
-    
+        return results
+
     # Define a function to convert a string to camel case
     def camel_case(self, s):
         # Use regular expression substitution to replace underscores and hyphens with spaces,
@@ -83,6 +86,5 @@ class Files:
             print("Failed to rename {}: {}".format(filename, exc))
 
     def rename_files(self, dir_path, files, mode):
-        print("JavaScript in camelCase: ", self.camel_case('Java_Script'))
         for f in files:
             self.rename_file(dir_path, mode, f)
