@@ -26,7 +26,8 @@ class GUI:
         while is_running:
             window_surface.fill((0,0,0))
 
-            for event in pygame.event.get():
+            events = pygame.event.get()
+            for event in events:
                 if event.type == pygame.QUIT:
                     is_running = False
                 if event.type == pygame.KEYDOWN:
@@ -41,15 +42,16 @@ class GUI:
             mouse = pygame.mouse.get_pos()
             buttons.mouse = mouse
             buttons.directory = self.directory
-            
-            # Folder text field & features.
-            input = Input(window_surface, self.directory)
-            input.handle_events()
-            input.render_input()
+            buttons.fileview.directory = self.directory
 
             # Buttons.
             buttons.draw_buttons(window_surface, mouse, window_size=WINDOW_SIZE)
-            buttons.button_clicks(mouse, window_size=WINDOW_SIZE, window_surface=window_surface)
+            buttons.button_clicks(mouse, window_size=WINDOW_SIZE, window_surface=window_surface, events=events)
+
+            # Folder text field & features.
+            input = Input(window_surface, self.directory)
+            input.handle_events(events)
+            input.render_input()
 
             # updates the frames of the game
             pygame.display.flip()

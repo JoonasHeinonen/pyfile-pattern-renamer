@@ -14,11 +14,11 @@ class Buttons:
     mode = ""
     mode_text = "Welcome to Pyfile Pattern Renamer! Please select a mode."
 
-    def __init__(self, mouse, directory, window_surface=None,fileview=Fileview):
+    def __init__(self, mouse, directory, window_surface=None, fileview=None):
         self.mouse = mouse
         self.directory = directory
         self.window_surface = window_surface
-        self.fileview = fileview
+        self.fileview = fileview or Fileview(directory)
 
     def set_mode(self, mode):
         self.mode = mode
@@ -30,9 +30,12 @@ class Buttons:
         folder_value = getattr(self, "directory", None) or os.environ.get(key, "")
         dotenv.set_key(dotenv_file, "FOLDER", folder_value)
 
-    def button_clicks(self, mouse, window_size=(640, 480), window_surface=None):
+    def button_clicks(self, mouse, window_size=(640, 480), window_surface=None, events=None):
         new_files = Files(self.directory)
-        for ev in pygame.event.get():
+        if events is None:
+            events = []
+
+        for ev in events:
             if ev.type == pygame.QUIT:
                 pygame.quit()
 
@@ -46,9 +49,11 @@ class Buttons:
                         self.mode_text = f"Conversion mode: {self.get_mode()}"
                 # Folder button.
                 if window_size[0] - 40 <= mouse[0] <= window_size[0] and 0 <= mouse[1] <= 40:
-                    self.fileview.update_files_view(self, window_surface=window_surface, mouse=mouse)
+                    self.fileview.update_files_view(window_surface=window_surface, mouse=mouse, window_size=window_size)
                     self.mode_text = "Updated the file view."
                     self.update_folder("FOLDER")
+                # Allow Fileview to handle scroll button clicks on any mouse down
+                self.fileview.click_scroll_buttons(mouse, window_size=window_size)
                 # Camel case button.
                 if 120 <= mouse[0] <= 159 and 0 <= mouse[1] <= 39:
                     self.set_mode(self.modes[0])
@@ -65,6 +70,13 @@ class Buttons:
 
         font = pygame.font.Font(None, 36)
         text = font.render("Convert", True, pygame.Color("#FFFFFF"))
+
+        # File listing and view.
+        self.fileview.update_files_view(
+            window_surface=window_surface,
+            mouse=mouse,
+            window_size=window_size
+        )
 
         pygame.draw.rect(window_surface, pygame.Color("#222222"), [0, 0, 199, 40])
         pygame.draw.rect(window_surface, pygame.Color("#222222"), [window_size[0] - 40, 0, 40, 40])
@@ -95,14 +107,6 @@ class Buttons:
 
         # superimposing the text onto our button
         window_surface.blit(text, (10, 10))
-
-        # File listing and view.
-        self.fileview.update_files_view(
-            self,
-            window_surface=window_surface,
-            mouse=mouse,
-            window_size=window_size
-        )
 
         mode_text_surface = pygame.font.Font(None, 16).render(self.mode_text, True, (255, 0, 0))
         window_surface.blit(mode_text_surface, (205, 25))
