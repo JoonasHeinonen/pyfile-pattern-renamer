@@ -16,15 +16,15 @@ class Fileview:
         new_folders = Files(self.directory).list_directory(self.directory, True)
         new_files = Files(self.directory).list_directory(self.directory, False)
         total_items = len(new_folders) + len(new_files)
-        visible_lines = max(1, (window_size[1] - 40) // 21)
+        visible_lines = max(1, (window_size[1] - 20) // 21)
         max_scroll = max(0, total_items - visible_lines)
 
-        x, y = mouse
         # Up button area
-        if window_size[0] - 15 <= x <= window_size[0] and 40 <= y <= 55:
+        if window_size[0] - 15 <= mouse[0] <= window_size[0] and 40 <= mouse[1] <= 55:
             self.scroll_index = max(0, self.scroll_index - 1)
+
         # Down button area
-        if window_size[0] - 15 <= x <= window_size[0] and window_size[1] - 15 <= y <= window_size[1]:
+        if window_size[0] - 15 <= mouse[0] <= window_size[0] and window_size[1] - 15 <= mouse[1] <= window_size[1]:
             self.scroll_index = min(max_scroll, self.scroll_index + 1)
 
     def update_files_view(self, y_offset=45, mouse=None, window_surface=None, window_size=(640, 480)):
