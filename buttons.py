@@ -18,7 +18,6 @@ class Buttons:
         self.mouse = mouse
         self.directory = directory
         self.window_surface = window_surface
-        # store an instance of Fileview (create one if not provided)
         self.fileview = fileview or Fileview(directory)
 
     def set_mode(self, mode):
