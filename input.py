@@ -6,8 +6,8 @@ class Input:
         self.screen = screen
         self.user_text = user_text
 
-    def handle_events(self):
-        for event in pygame.event.get():
+    def handle_events(self, events):
+        for event in events:
             if event.type == pygame.KEYDOWN:
                 print("Key pressed:", event.unicode)
                 if event.key == pygame.K_BACKSPACE:
