@@ -30,6 +30,7 @@ class Fileview:
         # Scrollbar.
         pygame.draw.rect(window_surface, pygame.Color("#222222"), [640 - 14, 40, 13, 480 - 40])
 
+
         # Scroll up.
         if window_size[0] - 15 <= mouse[0] <= window_size[0] and 0 <= mouse[1] >= 40  and 0 <= mouse[1] <= 55:
             window_surface.blit(scroll_button_up_pressed.render_icon()[0], (640 - 15, 40))
@@ -71,3 +72,6 @@ class Fileview:
             window_surface.blit(list_item, (25, y_offset))
             window_surface.blit(icon_fileview_file.render_icon()[0], (0, y_offset - 4))
             y_offset += 21
+        
+        pygame.draw.rect(window_surface, pygame.Color("#FF49D1"), [640 - 13, 56, 11, 480 - 72])
+        pygame.draw.rect(window_surface, pygame.Color("#FF0000"), [640 - 13, 56, 11, 480 - 72], 1)
