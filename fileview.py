@@ -16,7 +16,8 @@ class Fileview:
                 print("Mouse clicked at: ", mouse)
 
     def update_files_view(self, y_offset=45, mouse=None, window_surface=None, window_size=(640, 480)):
-        new_files = Files(self.directory).list_directory_files(self.directory)
+        new_folders = Files(self.directory).list_directory(self.directory, True)
+        new_files = Files(self.directory).list_directory(self.directory, False)
 
         scroll_button_up = Icon("media/scroll_button_up.png")
         scroll_button_up_pressed = Icon("media/scroll_button_up_pressed.png")
@@ -43,7 +44,22 @@ class Fileview:
 
         index = 0
 
+        for folder in new_folders:
+            icon_fileview_folder = Icon("media/icon_fileview_folder.png")
+            list_item = pygame.font.Font(None, 16).render(folder + "/", True, pygame.Color("#FFFFFF"))
+            colors = ["#927B16", "#63530D"]
+
+            if index % 2 == 0:
+                pygame.draw.rect(window_surface, pygame.Color(colors[0]), [1, y_offset - 4, 640 - 16, 20])
+            else:
+                pygame.draw.rect(window_surface, pygame.Color(colors[1]), [1, y_offset - 4, 640 - 16, 20])
+            index += 1
+            window_surface.blit(list_item, (25, y_offset))
+            window_surface.blit(icon_fileview_folder.render_icon()[0], (0, y_offset - 4))
+            y_offset += 21
+
         for file in new_files:
+            icon_fileview_file = Icon("media/icon_fileview_file.png")
             list_item = pygame.font.Font(None, 16).render(file, True, pygame.Color("#FFFFFF"))
             colors = ["#162D92", "#0F1066"]
 
@@ -52,5 +68,6 @@ class Fileview:
             else:
                 pygame.draw.rect(window_surface, pygame.Color(colors[1]), [1, y_offset - 4, 640 - 16, 20])
             index += 1
-            window_surface.blit(list_item, (5, y_offset))
+            window_surface.blit(list_item, (25, y_offset))
+            window_surface.blit(icon_fileview_file.render_icon()[0], (0, y_offset - 4))
             y_offset += 21
