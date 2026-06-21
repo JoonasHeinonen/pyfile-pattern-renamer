@@ -31,7 +31,6 @@ class GUI:
                 if event.type == pygame.QUIT:
                     is_running = False
                 if event.type == pygame.KEYDOWN:
-                    print("Key pressed:", event.unicode)
                     if event.key == pygame.K_BACKSPACE:
                         self.directory = self.directory[:-1]
                     else:
@@ -41,12 +40,20 @@ class GUI:
             # Mouse.
             mouse = pygame.mouse.get_pos()
             buttons.mouse = mouse
+            # push current GUI directory into buttons/fileview before rendering
             buttons.directory = self.directory
             buttons.fileview.directory = self.directory
 
             # Buttons.
             buttons.draw_buttons(window_surface, mouse, window_size=WINDOW_SIZE)
             buttons.button_clicks(mouse, window_size=WINDOW_SIZE, window_surface=window_surface, events=events)
+
+            # read back any directory change from buttons (e.g. folder click) so Input shows it
+            try:
+                self.directory = buttons.directory
+                buttons.fileview.directory = self.directory
+            except Exception:
+                pass
 
             # Folder text field & features.
             input = Input(window_surface, self.directory)

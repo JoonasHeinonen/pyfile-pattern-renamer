@@ -1,12 +1,18 @@
 import pygame
 from files import Files
 from icon import Icon
+import os
+import dotenv
 
 class Fileview:
 
-    def __init__(self, directory):
+    def __init__(self, directory, dotenv_file):
         self.directory = directory
+        self.dotenv_file = dotenv_file
         self.scroll_index = 0
+        self.hover_txt = ""
+        self.hover_over_folder = False
+        self.hover_over_file = False
 
     def click_scroll_buttons(self, mouse, window_size=(640, 480)):
         if mouse is None:
@@ -26,6 +32,16 @@ class Fileview:
         # Down button area
         if window_size[0] - 15 <= mouse[0] <= window_size[0] and window_size[1] - 15 <= mouse[1] <= window_size[1]:
             self.scroll_index = min(max_scroll, self.scroll_index + 1)
+
+        if (self.hover_over_folder):
+            folder_value = getattr(self, "directory", None) or os.environ.get("FOLDER", "")
+            # C:\Users\joona\Desktop\development\koekelberg
+            self.directory = "C:"
+            print(self.directory)
+            try:
+                dotenv.set_key(self.dotenv_file, "FOLDER", folder_value)
+            except PermissionError:
+                print("Cannot write .env: permission denied")
 
     def update_files_view(self, y_offset=45, mouse=None, window_surface=None, window_size=(640, 480)):
         new_folders = Files(self.directory).list_directory(self.directory, True)
@@ -60,18 +76,30 @@ class Fileview:
 
         index = 0
 
+        # Reset hover state before checking each row.
+        self.hover_over_file = False
+        self.hover_over_folder = False
+        self.hover_txt = ""
+
         # apply scroll offset to starting y position
         y_offset = y_offset - (self.scroll_index * 21)
 
         for folder in new_folders:
             icon_fileview_folder = Icon("media/icon_fileview_folder.png")
             list_item = pygame.font.Font(None, 16).render(folder + "/", True, pygame.Color("#FFFFFF"))
-            colors = ["#927B16", "#63530D"]
+            colors = ["#836E14", "#63530D", "#B19727"]
 
             if index % 2 == 0:
                 pygame.draw.rect(window_surface, pygame.Color(colors[0]), [1, y_offset - 4, window_size[0] - 16, 20])
             else:
                 pygame.draw.rect(window_surface, pygame.Color(colors[1]), [1, y_offset - 4, window_size[0] - 16, 20])
+
+            item_rect = pygame.Rect(1, y_offset - 4, window_size[0] - 16, 20)
+            if mouse and item_rect.collidepoint(mouse):
+                pygame.draw.rect(window_surface, pygame.Color(colors[2]), [1, y_offset - 4, window_size[0] - 16, 20])
+                self.hover_over_folder = True
+                self.hover_txt = folder
+
             index += 1
             window_surface.blit(list_item, (25, y_offset))
             window_surface.blit(icon_fileview_folder.render_icon()[0], (0, y_offset - 4))
@@ -80,13 +108,44 @@ class Fileview:
         for file in new_files:
             icon_fileview_file = Icon("media/icon_fileview_file.png")
             list_item = pygame.font.Font(None, 16).render(file, True, pygame.Color("#FFFFFF"))
-            colors = ["#162D92", "#0F1066"]
+            colors = ["#132575", "#0F1066", "#2C45B4"]
 
             if index % 2 == 0:
                 pygame.draw.rect(window_surface, pygame.Color(colors[0]), [1, y_offset - 4, window_size[0] - 16, 20])
             else:
                 pygame.draw.rect(window_surface, pygame.Color(colors[1]), [1, y_offset - 4, window_size[0] - 16, 20])
+
+            item_rect = pygame.Rect(1, y_offset - 4, window_size[0] - 16, 20)
+            if mouse and item_rect.collidepoint(mouse):
+                pygame.draw.rect(window_surface, pygame.Color(colors[2]), [1, y_offset - 4, window_size[0] - 16, 20])
+                self.hover_over_file = True
+                self.hover_txt = file
+
             index += 1
             window_surface.blit(list_item, (25, y_offset))
             window_surface.blit(icon_fileview_file.render_icon()[0], (0, y_offset - 4))
             y_offset += 21
+
+    def get_item_at(self, mouse, y_offset=45, window_size=(640, 480)):
+        """Return ('folder'|'file', name) for the item under `mouse`, or None."""
+        if mouse is None:
+            return None
+
+        new_folders = Files(self.directory).list_directory(self.directory, True)
+        new_files = Files(self.directory).list_directory(self.directory, False)
+
+        y = y_offset - (self.scroll_index * 21)
+
+        for folder in new_folders:
+            item_rect = pygame.Rect(1, y - 4, window_size[0] - 16, 20)
+            if item_rect.collidepoint(mouse):
+                return ("folder", folder)
+            y += 21
+
+        for file in new_files:
+            item_rect = pygame.Rect(1, y - 4, window_size[0] - 16, 20)
+            if item_rect.collidepoint(mouse):
+                return ("file", file)
+            y += 21
+
+        return None
