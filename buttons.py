@@ -50,6 +50,15 @@ class Buttons:
                 pygame.quit()
 
             if ev.type == pygame.MOUSEBUTTONDOWN:
+                # Check if back button was clicked
+                if self.fileview.hover_over_back_btn:
+                    parent_dir = self.fileview.trim_after_last_slash(self.fileview.directory)
+                    self.directory = parent_dir
+                    self.fileview.directory = parent_dir
+                    self.update_folder("FOLDER")
+                    self.mode_text = f"Back to: {parent_dir}"
+                    continue
+
                 # Check if a file/folder row was clicked in the Fileview
                 clicked = None
                 try:
