@@ -13,6 +13,16 @@ class Fileview:
         self.hover_txt = ""
         self.hover_over_folder = False
         self.hover_over_file = False
+        self.hover_over_back_btn = False
+
+    # Used for back button functionality, remove everything after the last slash.
+    def trim_after_last_slash(self, word):
+        if not word:
+            return word
+        last_slash = max(word.rfind("/"), word.rfind("\\"))
+        if last_slash == -1:
+            return word
+        return word[:last_slash]
 
     def click_scroll_buttons(self, mouse, window_size=(640, 480)):
         if mouse is None:
@@ -32,16 +42,6 @@ class Fileview:
         # Down button area
         if window_size[0] - 15 <= mouse[0] <= window_size[0] and window_size[1] - 15 <= mouse[1] <= window_size[1]:
             self.scroll_index = min(max_scroll, self.scroll_index + 1)
-
-        if (self.hover_over_folder):
-            folder_value = getattr(self, "directory", None) or os.environ.get("FOLDER", "")
-            # C:\Users\joona\Desktop\development\koekelberg
-            self.directory = "C:"
-            print(self.directory)
-            try:
-                dotenv.set_key(self.dotenv_file, "FOLDER", folder_value)
-            except PermissionError:
-                print("Cannot write .env: permission denied")
 
     def update_files_view(self, y_offset=45, mouse=None, window_surface=None, window_size=(640, 480)):
         new_folders = Files(self.directory).list_directory(self.directory, True)
@@ -70,10 +70,6 @@ class Fileview:
         else:
             window_surface.blit(scroll_button_down.render_icon()[0], (window_size[0] - 15, window_size[1] - 15))
 
-        # Click on scroll up.
-
-        # Click on scroll down.
-
         index = 0
 
         # Reset hover state before checking each row.
@@ -83,6 +79,22 @@ class Fileview:
 
         # apply scroll offset to starting y position
         y_offset = y_offset - (self.scroll_index * 21)
+
+        # Backbutton.
+        icon_fileview_back = Icon("media/icon_fileview_back.png")
+        pygame.draw.rect(window_surface, pygame.Color("#5A2400"), [1, y_offset - 4, window_size[0] - 16, 20])
+
+        back_btn_item_rect = pygame.Rect(1, y_offset - 4, window_size[0] - 16, 20)
+        if mouse and back_btn_item_rect.collidepoint(mouse):
+            pygame.draw.rect(window_surface, pygame.Color("#943B00"), [1, y_offset - 4, window_size[0] - 16, 20])
+            self.hover_over_back_btn = True
+        else:
+            self.hover_over_back_btn = False
+
+        back_text = pygame.font.Font(None, 16).render("...", True, pygame.Color("#FFFFFF"))
+        window_surface.blit(back_text, (25, y_offset))
+        window_surface.blit(icon_fileview_back.render_icon()[0], (0, y_offset - 4))
+        y_offset += 21
 
         for folder in new_folders:
             icon_fileview_folder = Icon("media/icon_fileview_folder.png")
@@ -126,7 +138,7 @@ class Fileview:
             window_surface.blit(icon_fileview_file.render_icon()[0], (0, y_offset - 4))
             y_offset += 21
 
-    def get_item_at(self, mouse, y_offset=45, window_size=(640, 480)):
+    def get_item_at(self, mouse, y_offset=66, window_size=(640, 480)):
         """Return ('folder'|'file', name) for the item under `mouse`, or None."""
         if mouse is None:
             return None
