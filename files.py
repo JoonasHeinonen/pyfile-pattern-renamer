@@ -56,7 +56,6 @@ class Files:
                 return filename
 
     def rename_file(self, dir_path, mode, filename):
-        print("Renaming file: ", mode)
         normalized_name = self.normalize_filename(filename, mode)
         old_path = os.path.join(dir_path, filename)
         new_path = os.path.join(dir_path, normalized_name)

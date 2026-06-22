@@ -1,8 +1,6 @@
 import pygame
 from files import Files
 from icon import Icon
-import os
-import dotenv
 
 class Fileview:
 
@@ -33,7 +31,7 @@ class Fileview:
         new_files = Files(self.directory).list_directory(self.directory, False)
         total_items = len(new_folders) + len(new_files)
         visible_lines = max(1, (window_size[1] - 20) // 21)
-        max_scroll = max(0, total_items - visible_lines)
+        max_scroll = max(0, total_items - visible_lines + 1)
 
         # Up button area
         if window_size[0] - 15 <= mouse[0] <= window_size[0] and 40 <= mouse[1] <= 55:
@@ -70,8 +68,6 @@ class Fileview:
         else:
             window_surface.blit(scroll_button_down.render_icon()[0], (window_size[0] - 15, window_size[1] - 15))
 
-        index = 0
-
         # Reset hover state before checking each row.
         self.hover_over_file = False
         self.hover_over_folder = False
@@ -92,6 +88,8 @@ class Fileview:
             self.hover_over_back_btn = False
 
         back_text = pygame.font.Font(None, 16).render("...", True, pygame.Color("#FFFFFF"))
+
+        index = 1
         window_surface.blit(back_text, (25, y_offset))
         window_surface.blit(icon_fileview_back.render_icon()[0], (0, y_offset - 4))
         y_offset += 21
@@ -137,6 +135,11 @@ class Fileview:
             window_surface.blit(list_item, (25, y_offset))
             window_surface.blit(icon_fileview_file.render_icon()[0], (0, y_offset - 4))
             y_offset += 21
+
+        if self.hover_over_file or self.hover_over_back_btn or self.hover_over_folder:
+            pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
+        else:
+            pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
 
     def get_item_at(self, mouse, y_offset=66, window_size=(640, 480)):
         """Return ('folder'|'file', name) for the item under `mouse`, or None."""
