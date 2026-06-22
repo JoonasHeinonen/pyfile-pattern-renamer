@@ -76,6 +76,9 @@ class Buttons:
                         self.update_folder("FOLDER")
                         self.mode_text = f"Entered folder: {name}"
                         continue
+                    elif typ == "file":
+                        new_files.rename_file(self.directory, self.get_mode(), name)
+                        continue
                 # Convert button.
                 if 0 <= mouse[0] <= 119 and 0 <= mouse[1] <= 39:
                     new_files.convert_files(self.get_mode())
